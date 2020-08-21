@@ -62,6 +62,7 @@ struct MasterView: View {
     }
     
 }
+
 struct ItemDateView: View {
     var date: Date
     var body: some View {

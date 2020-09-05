@@ -35,13 +35,18 @@ struct DetailView: View {
             DetailContentView(model: model)
                 .padding()
                 .navigationBarTitle(Text("Detail"))
+// CRASH - CLICK BUTTON TWICE TO CRASH APP ON UPDATE
                 .navigationBarItems(
                     trailing: Button(action: { self.master.update() }) {
                         Text("Update")
                     }
                 )
+// CRASH - UNCOMMENT THIS CODE TO CRASH APP ON UPDATE
+                .onReceive(master.$update1) { count in
+                    tracker.log("DetailView Update 1 Received \(count)")
+                }
                 .onAppear {
-                    print("- DetailView onAppear")
+                    tracker.log("DetailView onAppear")
                 }
         }
     }
@@ -55,11 +60,8 @@ struct DetailContentView: View {
     var body: some View {
         tracker.body {
             VStack(spacing: 16) {
-                ItemDateView(date: model.item.date)
+                ItemDateView(item: model.item)
                 DetailBoilerplateView(text: model.boilerplate)
-    //            NavigationLink(destination: DebugStackView(DeeperView())) {
-    //                Text("Deeper")
-    //            }
                 Spacer()
             }
         }
@@ -82,10 +84,13 @@ struct DeeperView: View {
 
 struct DetailBoilerplateView: View {
     var text: String
+    let tracker = InstanceTracker("DetailBoilerplateView")
     var body: some View {
-        Text(text)
-            .font(.footnote)
-            .foregroundColor(.secondary)
+        tracker.body {
+            Text(text)
+                .font(.footnote)
+                .foregroundColor(.secondary)
+        }
     }
 }
 

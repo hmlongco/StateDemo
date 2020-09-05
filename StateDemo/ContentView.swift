@@ -8,16 +8,26 @@
 
 import SwiftUI
 
+extension MasterViewModel {
+    static var shared = MasterViewModel()
+}
+
 struct ContentView: View {
-    @ObservedObject var master = MasterViewModel()
+//    @ObservedObject var master = MasterViewModel.shared
     let tracker = InstanceTracker("ContentView")
     var body: some View {
         tracker.body {
             NavigationView {
                 MasterView()
-                    .environmentObject(master)
+                    .environmentObject(MasterViewModel.shared)
             }
             .navigationViewStyle(StackNavigationViewStyle())
+//            .onReceive(master.$update1) { count in
+//                tracker.log("ContentView Update 1 Received \(count)")
+//            }
+//            .onReceive(master.$update2) { count in
+//                tracker.log("ContentView Update 2 Received \(count)")
+//            }
         }
     }
 }

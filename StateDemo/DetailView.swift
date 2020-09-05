@@ -35,16 +35,16 @@ struct DetailView: View {
             DetailContentView(model: model)
                 .padding()
                 .navigationBarTitle(Text("Detail"))
-// CRASH - CLICK BUTTON TWICE TO CRASH APP ON UPDATE
+// CRASH - UNCOMMENT THIS CODE TO CRASH APP ON UPDATE
+                .onReceive(master.$update1) { count in
+                    tracker.log("DetailView Update 1 Received \(count)")
+                }
+// CRASH - COMMENT ABOVE CODE AND CLICK BUTTON TWICE TO CRASH APP ON UPDATE
                 .navigationBarItems(
                     trailing: Button(action: { self.master.update() }) {
                         Text("Update")
                     }
                 )
-// CRASH - UNCOMMENT THIS CODE TO CRASH APP ON UPDATE
-                .onReceive(master.$update1) { count in
-                    tracker.log("DetailView Update 1 Received \(count)")
-                }
                 .onAppear {
                     tracker.log("DetailView onAppear")
                 }

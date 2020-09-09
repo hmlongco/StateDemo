@@ -17,7 +17,9 @@ class DetailViewModel: ObservableObject {
         self.item = item
     }
 
-    var boilerplate = "This is some boilplate text."
+    var boilerplate: String {
+        "You're viewing model #\(tracker.instance)."
+    }
 }
 
 struct DetailView: View {
@@ -31,22 +33,32 @@ struct DetailView: View {
 
     let tracker = InstanceTracker("DetailView")
     var body: some View {
-        tracker.body {
+        tracker {
             DetailContentView(model: model)
                 .padding()
                 .navigationBarTitle(Text("Detail"))
-// CRASH - UNCOMMENT THIS CODE TO CRASH APP ON UPDATE
-                .onReceive(master.$update1) { count in
-                    tracker.log("DetailView Update 1 Received \(count)")
-                }
-// CRASH - COMMENT ABOVE CODE AND CLICK BUTTON TWICE TO CRASH APP ON UPDATE
+// CRASH - UNCOMMENT THIS CODE TO IMMEDIATELY CRASH APP ON PRESSING UPDATE
+//                .onReceive(master.$update1) { count in
+//                    tracker.log("DetailView Update 1 Received \(count)")
+//                }
+// CRASH - COMMENT ABOVE CODE AND TAP BUTTON TWICE TO CRASH APP
                 .navigationBarItems(
-                    trailing: Button(action: { self.master.update() }) {
+                    trailing: Button(action: {
+//                        OperationQueue.main.addOperation {
+//                            self.tracker.log("\n### Begin Update Cycle\n")
+//                        }
+                        DispatchQueue.main.async {
+                            self.tracker("\n### Begin Update Cycle\n")
+                        }
+                        self.tracker("\n### Begin Update")
+                        self.master.update()
+                        self.tracker("### End Update\n")
+                    }) {
                         Text("Update")
                     }
                 )
                 .onAppear {
-                    tracker.log("DetailView onAppear")
+                    tracker("DetailView onAppear")
                 }
         }
     }
@@ -56,17 +68,42 @@ struct DetailContentView: View {
 
     var model: DetailViewModel
 
+    @State var uuid = UUID()
+
     let tracker = InstanceTracker("DetailContentView")
     var body: some View {
-        tracker.body {
+        tracker {
             VStack(spacing: 16) {
                 ItemDateView(item: model.item)
+                DetailStateView()
                 DetailBoilerplateView(text: model.boilerplate)
+//                Button(action: {
+//                    DispatchQueue.main.async {
+//                        self.tracker.log("\n### Begin State Update Cycle\n")
+//                    }
+//                    self.tracker.log("\n### Begin State Update")
+//                    self.trackedValue += 1
+//                    self.tracker.log("### End State Update\n")
+//                }) {
+//                    Text("State \(trackedValue)")
+//                }
                 Spacer()
             }
         }
     }
-    
+
+}
+
+struct DetailStateView: View {
+    @State var uuid = UUID()
+    let tracker = InstanceTracker("DetailStateView")
+    var body: some View {
+        tracker("\(uuid)") {
+            Text("\(uuid)")
+                .font(.footnote)
+                .foregroundColor(.secondary)
+        }
+    }
 }
 
 struct DeeperView: View {
@@ -86,7 +123,7 @@ struct DetailBoilerplateView: View {
     var text: String
     let tracker = InstanceTracker("DetailBoilerplateView")
     var body: some View {
-        tracker.body {
+        tracker(text) {
             Text(text)
                 .font(.footnote)
                 .foregroundColor(.secondary)

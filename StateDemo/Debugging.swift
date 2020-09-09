@@ -19,24 +19,24 @@ class InstanceTracker {
     private static var indent: Int = 0
     init(_ name: String) {
         self.name = name
-        log("\(name).init() #\(instance)")
+        self("\(name).init() #\(instance)")
     }
     deinit {
-        log("\(name).deinit() #\(instance)")
+        self("\(name).deinit() #\(instance)")
     }
-    func body<Result>(_ message: String? = nil, _ result: () -> Result) -> Result {
-        log("\(name).body #\(instance) {")
+    func callAsFunction<Result>(_ message: String? = nil, _ result: () -> Result) -> Result {
+        self("\(name).body #\(instance) {")
         Self.indent += 2
         if let message = message {
-            log(message)
+            self(message)
         }
         defer {
             Self.indent -= 2
-            log("}")
+            self("}")
         }
         return result()
     }
-    func log(_ string: String) {
+    func callAsFunction(_ string: String) {
         print(String(repeating: " ", count: Self.indent) + string)
     }
 }

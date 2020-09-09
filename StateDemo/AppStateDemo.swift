@@ -15,7 +15,7 @@ struct AppStateDemo: App {
 
     let tracker = InstanceTracker("AppStateDemo")
     var body: some Scene {
-        tracker.body {
+        tracker {
             WindowGroup {
                 ContentView()
             }

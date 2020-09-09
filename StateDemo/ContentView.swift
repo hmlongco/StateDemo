@@ -13,12 +13,12 @@ extension MasterViewModel {
 }
 
 struct ContentView: View {
-//    @ObservedObject var master = MasterViewModel.shared
+    @ObservedObject var master = MasterViewModel.shared
     let tracker = InstanceTracker("ContentView")
     var body: some View {
-        tracker.body {
+        tracker {
             NavigationView {
-                MasterView()
+                AnyView(MasterView())
                     .environmentObject(MasterViewModel.shared)
             }
             .navigationViewStyle(StackNavigationViewStyle())

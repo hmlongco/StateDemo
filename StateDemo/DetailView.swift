@@ -24,12 +24,12 @@ class DetailViewModel: ObservableObject {
 
 struct DetailView: View {
 
+    @StateObject var model: DetailViewModel
     @EnvironmentObject var master: MasterViewModel
-    @ObservedObject var model: DetailViewModel
 
-    init(item: Item) {
-        self.model = DetailViewModel(item: item)
-    }
+//    init(item: Item) {
+//        self.model = DetailViewModel(item: item)
+//    }
 
     let tracker = InstanceTracker("DetailView")
     var body: some View {
@@ -132,14 +132,8 @@ struct DetailBoilerplateView: View {
 }
 
 struct WrappedDetailView: View {
-    var instance = InstanceTracker.count
     let item: Item
-    init(item: Item) {
-        self.item = item
-        print("WrappedDetailView.init #\(instance) item \(item)")
-    }
     var body: some View {
-        print("WrappedDetailView.body #\(instance) item \(item)")
-        return DetailView(item: item)
+        return DetailView(model: DetailViewModel(item: item))
     }
 }

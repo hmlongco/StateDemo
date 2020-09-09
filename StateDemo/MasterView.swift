@@ -63,7 +63,8 @@ struct MasterView: View {
             List {
                 ForEach(master.items) { item in
                     NavigationLink(
-                        destination: DetailView(item: item)
+                        destination: DetailView(model: DetailViewModel(item: item))
+//                        destination: WrappedDetailView(item: item)
                     ) {
                         ItemDateView(item: item)
                     }

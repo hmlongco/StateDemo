@@ -13,7 +13,7 @@ extension MasterViewModel {
 }
 
 struct ContentView: View {
-    @ObservedObject var master = MasterViewModel.shared
+    //@ObservedObject var master = MasterViewModel.shared
     let tracker = InstanceTracker("ContentView")
     var body: some View {
         tracker {
@@ -22,12 +22,6 @@ struct ContentView: View {
                     .environmentObject(MasterViewModel.shared)
             }
             .navigationViewStyle(StackNavigationViewStyle())
-//            .onReceive(master.$update1) { count in
-//                tracker.log("ContentView Update 1 Received \(count)")
-//            }
-//            .onReceive(master.$update2) { count in
-//                tracker.log("ContentView Update 2 Received \(count)")
-//            }
         }
     }
 }
